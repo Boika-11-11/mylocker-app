@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pending sign-ups - MyLocker</title>
+    <link rel="stylesheet" th:href="@{/css/locker.css}">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="logo" th:href="@{/}">
+            <svg class="logo-mark" viewBox="0 0 64 64">
+                <rect x="6" y="20" width="52" height="38" rx="7" fill="#F72585"/>
+                <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
+                <circle cx="32" cy="36" r="5" fill="#fff"/>
+                <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
+            </svg>
+            <span class="logo-text">My<span>Locker</span></span>
+        </a>
+        <div class="spacer"></div>
+        <span class="who" sec:authentication="name"></span>
+        <a class="linkbtn" th:href="@{/}">Home</a>
+        <form th:action="@{/logout}" method="post" class="inline">
+            <button type="submit" class="linkbtn">Log out</button>
+        </form>
+    </div>
+</header>
+
+<div class="wrap">
+
+    <h1>Pending sign-ups</h1>
+    <p class="sub">People who have registered but cannot sign in until you approve them.</p>
+
+    <p class="empty" th:if="${pending.isEmpty()}">Nobody is waiting for approval.</p>
+
+    <table th:unless="${pending.isEmpty()}">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th></th>
+        </tr>
+        <tr th:each="user : ${pending}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td class="right">
+                <form th:action="@{/admin/approve}" method="post" class="inline">
+                    <input type="hidden" name="id" th:value="${user.id}">
+                    <button type="submit">Approve</button>
+                </form>
+                <form th:action="@{/admin/reject}" method="post" class="inline"
+                      onsubmit="return confirm('Reject and delete this sign-up?');">
+                    <input type="hidden" name="id" th:value="${user.id}">
+                    <button type="submit" class="danger">Reject</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+</body>
+</html>

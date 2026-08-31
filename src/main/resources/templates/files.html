@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Files - MyLocker</title>
+    <link rel="stylesheet" th:href="@{/css/locker.css}">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="logo" th:href="@{/}">
+            <svg class="logo-mark" viewBox="0 0 64 64">
+                <rect x="6" y="20" width="52" height="38" rx="7" fill="#F72585"/>
+                <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
+                <circle cx="32" cy="36" r="5" fill="#fff"/>
+                <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
+            </svg>
+            <span class="logo-text">My<span>Locker</span></span>
+        </a>
+        <div class="spacer"></div>
+        <span class="who" sec:authentication="name"></span>
+        <a class="linkbtn" th:href="@{/}">Home</a>
+        <form th:action="@{/logout}" method="post" class="inline">
+            <button type="submit" class="linkbtn">Log out</button>
+        </form>
+    </div>
+</header>
+
+<div class="wrap">
+
+    <h1>My Files</h1>
+    <p class="sub">Upload, organise and download your files securely.</p>
+
+    <p class="msg-ok" th:if="${message}" th:text="${message}"></p>
+    <p class="msg-err" th:if="${error}" th:text="${error}"></p>
+
+    <div class="uploader">
+        <form th:action="@{/files/upload}" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <select name="folderId">
+                <option value="">Unfiled</option>
+                <option th:each="box : ${allFolders}"
+                        th:value="${box.id}"
+                        th:text="${box.parent == null} ? ${box.name} : ${box.parent.name} + ' / ' + ${box.name}"
+                        th:selected="${currentFolder != null and currentFolder.id == box.id}"></option>
+            </select>
+            <button type="submit">Upload</button>
+        </form>
+        <span class="hint">Max 10MB per file</span>
+    </div>
+
+    <nav class="crumbs">
+        <a th:href="@{/files}">Home</a>
+        <span th:if="${currentFolder != null and currentFolder.parent != null}">
+            <span class="sep">/</span>
+            <a th:href="@{/files(folderId=${currentFolder.parent.id})}"
+               th:text="${currentFolder.parent.name}"></a>
+        </span>
+        <span th:if="${currentFolder != null}">
+            <span class="sep">/</span>
+            <strong th:text="${currentFolder.name}"></strong>
+        </span>
+    </nav>
+
+    <div class="folder-grid">
+
+        <a class="folder-card" th:if="${currentFolder != null}"
+           th:href="@{/files(folderId=${currentFolder.parent != null} ? ${currentFolder.parent.id} : null)}">
+            <svg viewBox="0 0 64 52" class="folder-icon up">
+                <path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/>
+            </svg>
+            <span class="folder-name">Back</span>
+        </a>
+
+        <a class="folder-card" th:each="box : ${visibleFolders}"
+           th:href="@{/files(folderId=${box.id})}"
+           th:attr="data-id=${box.id},data-name=${box.name}">
+            <svg viewBox="0 0 64 52" class="folder-icon">
+                <path class="tab" d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v6H4z"/>
+                <path class="body" d="M4 14h56v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/>
+            </svg>
+            <span class="folder-name" th:text="${box.name}"></span>
+        </a>
+
+        <a class="folder-card new" th:if="${canCreateSubfolder}" href="#" id="newFolderBtn">
+            <svg viewBox="0 0 64 52" class="folder-icon">
+                <path class="dashed" d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/>
+                <text x="32" y="36" class="plus">+</text>
+            </svg>
+            <span class="folder-name">New folder</span>
+        </a>
+
+    </div>
+
+    <p class="hint" th:if="${!visibleFolders.isEmpty()}">Right-click a folder to rename or delete it.</p>
+
+    <h2 th:text="${currentFolder == null} ? 'Unfiled files' : 'Files in ' + ${currentFolder.name}"></h2>
+
+    <p class="empty" th:if="${files.isEmpty()}">Nothing here yet.</p>
+
+    <table th:unless="${files.isEmpty()}">
+        <tr>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Uploaded</th>
+            <th></th>
+        </tr>
+        <tr th:each="f : ${files}">
+            <td th:text="${f.originalName}"></td>
+            <td th:text="${#numbers.formatDecimal(f.sizeInBytes / 1024.0, 1, 1)} + ' KB'"></td>
+            <td th:text="${#temporals.format(f.uploadedAt, 'yyyy-MM-dd HH:mm')}"></td>
+            <td class="right">
+                <a th:href="@{/files/download/{id}(id=${f.id})}">Download</a>
+                <form th:action="@{/files/delete}" method="post" class="inline"
+                      onsubmit="return confirm('Delete this file permanently?');">
+                    <input type="hidden" name="id" th:value="${f.id}">
+                    <input type="hidden" name="folderId"
+                           th:if="${currentFolder != null}" th:value="${currentFolder.id}">
+                    <button type="submit" class="danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<div id="menu" class="ctx">
+    <button type="button" id="ctxOpen">Open</button>
+    <button type="button" id="ctxRename">Rename</button>
+    <button type="button" id="ctxDelete" class="danger-text">Delete</button>
+</div>
+
+<form th:action="@{/folders/create}" method="post" id="createForm" class="hidden">
+    <input type="hidden" name="parentId"
+           th:if="${currentFolder != null}" th:value="${currentFolder.id}">
+    <input type="hidden" name="name" id="createName">
+</form>
+
+<form th:action="@{/folders/rename}" method="post" id="renameForm" class="hidden">
+    <input type="hidden" name="id" id="renameId">
+    <input type="hidden" name="name" id="renameName">
+</form>
+
+<form th:action="@{/folders/delete}" method="post" id="deleteForm" class="hidden">
+    <input type="hidden" name="id" id="deleteId">
+</form>
+
+<script>
+    var menu = document.getElementById('menu');
+    var targetId = null;
+    var targetName = null;
+    var targetHref = null;
+
+    document.querySelectorAll('.folder-card[data-id]').forEach(function (card) {
+        card.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+            targetId = card.getAttribute('data-id');
+            targetName = card.getAttribute('data-name');
+            targetHref = card.getAttribute('href');
+            menu.style.left = e.pageX + 'px';
+            menu.style.top = e.pageY + 'px';
+            menu.style.display = 'block';
+        });
+    });
+
+    document.addEventListener('click', function () {
+        menu.style.display = 'none';
+    });
+
+    document.getElementById('ctxOpen').addEventListener('click', function () {
+        window.location.href = targetHref;
+    });
+
+    document.getElementById('ctxRename').addEventListener('click', function () {
+        var newName = prompt('Rename folder', targetName);
+        if (newName && newName.trim()) {
+            document.getElementById('renameId').value = targetId;
+            document.getElementById('renameName').value = newName.trim();
+            document.getElementById('renameForm').submit();
+        }
+    });
+
+    document.getElementById('ctxDelete').addEventListener('click', function () {
+        if (confirm('Delete "' + targetName + '"? Files inside move to Unfiled, sub-folders move to the top level.')) {
+            document.getElementById('deleteId').value = targetId;
+            document.getElementById('deleteForm').submit();
+        }
+    });
+
+    var newBtn = document.getElementById('newFolderBtn');
+    if (newBtn) {
+        newBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            var name = prompt('New folder name');
+            if (name && name.trim()) {
+                document.getElementById('createName').value = name.trim();
+                document.getElementById('createForm').submit();
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
