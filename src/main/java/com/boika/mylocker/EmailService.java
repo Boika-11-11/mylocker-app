@@ -37,9 +37,9 @@ public class EmailService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromAddress);
             message.setTo(adminEmail);
-            message.setSubject("MyLocker: new sign-up awaiting approval");
+            message.setSubject("HopeConnect: new sign-up awaiting approval");
             message.setText(
-                    "A new person has registered on MyLocker.\n\n"
+                    "A new person has registered on HopeConnect.\n\n"
                             + "Username: " + newUsername + "\n\n"
                             + "They cannot sign in until you approve them.\n"
                             + "Open the admin page to approve or reject:\n"

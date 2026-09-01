@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home - MyLocker</title>
+    <title>Home - HopeConnect</title>
     <link rel="stylesheet" th:href="@{/css/locker.css}">
 </head>
 <body>
@@ -18,7 +18,7 @@
                 <circle cx="32" cy="36" r="5" fill="#fff"/>
                 <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
             </svg>
-            <span class="logo-text">My<span>Locker</span></span>
+            <span class="logo-text">Hope<span>Connect</span></span>
         </a>
         <div class="spacer"></div>
         <span class="who" sec:authentication="name"></span>
@@ -50,7 +50,7 @@
                 <path d="M10 56a22 22 0 0 1 44 0z" fill="#F72585"/>
             </svg>
             <h3>Pending sign-ups</h3>
-            <p>Review and approve people waiting for access to the locker.</p>
+            <p>Review and approve people waiting for access.</p>
         </a>
 
         <a class="tile" th:href="@{/admin/users}" sec:authorize="hasRole('ADMIN')">

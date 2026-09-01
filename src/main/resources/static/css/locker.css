@@ -64,8 +64,12 @@ a {
     letter-spacing: -.2px;
 }
 
-.logo-text span {
+.logo-text {
     color: var(--pink);
+}
+
+.logo-text span {
+    color: #fff;
 }
 
 .spacer {
@@ -473,6 +477,10 @@ td a:hover {
 
 .auth-logo .logo-text {
     font-size: 20px;
+    color: var(--pink);
+}
+
+.auth-logo .logo-text span {
     color: var(--ink);
 }
 

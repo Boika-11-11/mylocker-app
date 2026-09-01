@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sign in - MyLocker</title>
+    <title>Sign in - HopeConnect</title>
     <link rel="stylesheet" th:href="@{/css/locker.css}">
 </head>
 <body class="auth-page">
@@ -17,11 +17,11 @@
             <circle cx="32" cy="36" r="5" fill="#fff"/>
             <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
         </svg>
-        <span class="logo-text">My<span>Locker</span></span>
+        <span class="logo-text">Hope<span>Connect</span></span>
     </div>
 
     <h1>Sign in</h1>
-    <p class="sub">Enter your details to open your locker.</p>
+    <p class="sub">Enter your details to open your account.</p>
 
     <p class="msg-err" th:if="${param.error}">Invalid credentials.</p>
     <p class="msg-ok" th:if="${param.logout}">You have been signed out.</p>

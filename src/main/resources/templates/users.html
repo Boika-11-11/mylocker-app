@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Manage users - MyLocker</title>
+    <title>Manage users - HopeConnect</title>
     <link rel="stylesheet" th:href="@{/css/locker.css}">
 </head>
 <body>
@@ -18,7 +18,7 @@
                 <circle cx="32" cy="36" r="5" fill="#fff"/>
                 <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
             </svg>
-            <span class="logo-text">My<span>Locker</span></span>
+            <span class="logo-text">Hope<span>Connect</span></span>
         </a>
         <div class="spacer"></div>
         <span class="who" sec:authentication="name"></span>
@@ -32,7 +32,7 @@
 <div class="wrap">
 
     <h1>Manage users</h1>
-    <p class="sub">Everyone registered on MyLocker. You cannot disable or delete your own account.</p>
+    <p class="sub">Everyone registered on HopeConnect. You cannot disable or delete your own account.</p>
 
     <p class="msg-ok" th:if="${message}" th:text="${message}"></p>
     <p class="msg-err" th:if="${error}" th:text="${error}"></p>
