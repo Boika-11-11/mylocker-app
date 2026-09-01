@@ -19,15 +19,23 @@ public class SecurityConfig {
     public SecurityFilterChain appChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/login", "/signup").permitAll()
+
+                        .requestMatchers("/", "/about", "/contact",
+                                "/login", "/forgot-password", "/reset-password").permitAll()
+
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                        .requestMatchers("/files/upload", "/files/delete", "/files/move",
+                                "/folders/**").hasAnyRole("ADMIN", "USER")
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/", true)
+                        .defaultSuccessUrl("/dashboard", true)
                         .failureUrl("/login?error")
                         .permitAll()
                 )

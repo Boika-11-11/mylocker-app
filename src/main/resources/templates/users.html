@@ -11,7 +11,7 @@
 
 <header class="topbar">
     <div class="topbar-inner">
-        <a class="logo" th:href="@{/}">
+        <a class="logo" th:href="@{/dashboard}">
             <svg class="logo-mark" viewBox="0 0 64 64">
                 <rect x="6" y="20" width="52" height="38" rx="7" fill="#F72585"/>
                 <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
@@ -22,7 +22,7 @@
         </a>
         <div class="spacer"></div>
         <span class="who" sec:authentication="name"></span>
-        <a class="linkbtn" th:href="@{/}">Home</a>
+        <a class="linkbtn" th:href="@{/dashboard}">Home</a>
         <form th:action="@{/logout}" method="post" class="inline">
             <button type="submit" class="linkbtn">Log out</button>
         </form>
@@ -32,16 +32,40 @@
 <div class="wrap">
 
     <h1>Manage users</h1>
-    <p class="sub">Everyone registered on HopeConnect. You cannot disable or delete your own account.</p>
+    <p class="sub">Access is by invitation only. You cannot disable or delete your own account.</p>
 
     <p class="msg-ok" th:if="${message}" th:text="${message}"></p>
     <p class="msg-err" th:if="${error}" th:text="${error}"></p>
 
-    <p><a th:href="@{/admin}">View pending sign-ups</a></p>
+    <div class="card" style="margin-bottom:26px;">
+        <h3 style="margin:0 0 14px;font-size:15px;">Invite someone</h3>
+
+        <form th:action="@{/admin/users/invite}" method="post"
+              style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+
+            <div style="flex:1;min-width:220px;">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" required maxlength="100">
+            </div>
+
+            <div style="flex:1;min-width:160px;">
+                <label for="username">Their name</label>
+                <input type="text" id="username" name="username" required maxlength="30">
+            </div>
+
+            <button type="submit">Send invite</button>
+
+        </form>
+
+        <p class="hint" style="margin-top:10px;">
+            They receive an email with a link to set their own password. The link expires in 30 minutes.
+        </p>
+    </div>
 
     <table>
         <tr>
-            <th>Username</th>
+            <th>Name</th>
+            <th>Email</th>
             <th>Role</th>
             <th>Status</th>
             <th></th>
@@ -49,18 +73,20 @@
         <tr th:each="u : ${users}">
             <td>
                 <span th:text="${u.username}"></span>
-                <span th:if="${u.username == me}" class="hint"> (you)</span>
+                <span th:if="${u.email == me}" class="hint"> (you)</span>
             </td>
+            <td th:text="${u.email}"></td>
             <td th:text="${u.role}"></td>
             <td>
-                <span th:if="${u.approved}" style="color:#12653A;">Active</span>
+                <span th:if="${u.approved and u.lastLoginAt != null}" style="color:#12653A;">Active</span>
+                <span th:if="${u.approved and u.lastLoginAt == null}" style="color:#8A6D00;">Invited</span>
                 <span th:unless="${u.approved}" style="color:#A1004F;">Disabled</span>
             </td>
             <td class="right">
 
-                <span th:if="${u.username == me}" class="hint">No actions on yourself</span>
+                <span th:if="${u.email == me}" class="hint">No actions on yourself</span>
 
-                <span th:unless="${u.username == me}">
+                <span th:unless="${u.email == me}">
 
                     <form th:if="${u.approved}" th:action="@{/admin/users/disable}"
                           method="post" class="inline"

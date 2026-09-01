@@ -15,11 +15,20 @@ public class DataSeeder implements CommandLineRunner {
     private final AppUserRepository repository;
     private final PasswordEncoder encoder;
 
+    @Value("${mylocker.admin.email-login:}")
+    private String adminEmail;
+
     @Value("${mylocker.admin.username:}")
     private String adminUsername;
 
     @Value("${mylocker.admin.password:}")
     private String adminPassword;
+
+    @Value("${mylocker.demo.email:demo@hopeconnect.dev}")
+    private String demoEmail;
+
+    @Value("${mylocker.demo.password:}")
+    private String demoPassword;
 
     public DataSeeder(AppUserRepository repository, PasswordEncoder encoder) {
         this.repository = repository;
@@ -28,25 +37,69 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        createAdmin();
+        createDemo();
+    }
 
-        if (adminUsername == null || adminUsername.isBlank()
+    private void createAdmin() {
+
+        if (adminEmail == null || adminEmail.isBlank()
                 || adminPassword == null || adminPassword.isBlank()) {
             log.warn(">>> No admin credentials configured. Skipping admin creation.");
             return;
         }
 
-        if (repository.findByUsername(adminUsername).isPresent()) {
+        String cleanEmail = adminEmail.trim().toLowerCase();
+
+        if (repository.findByEmail(cleanEmail).isPresent()) {
             return;
         }
 
+        String displayName = (adminUsername == null || adminUsername.isBlank())
+                ? "Admin"
+                : capitalise(adminUsername.trim());
+
         AppUser admin = new AppUser();
-        admin.setUsername(adminUsername);
+        admin.setEmail(cleanEmail);
+        admin.setUsername(displayName);
         admin.setPassword(encoder.encode(adminPassword));
         admin.setRole("ADMIN");
         admin.setApproved(true);
 
         repository.save(admin);
 
-        log.info(">>> Created ADMIN user: {}", adminUsername);
+        log.info(">>> Created ADMIN user: {} ({})", displayName, cleanEmail);
+    }
+
+    private void createDemo() {
+
+        if (demoPassword == null || demoPassword.isBlank()) {
+            log.info(">>> No demo password configured. Skipping demo account.");
+            return;
+        }
+
+        String cleanEmail = demoEmail.trim().toLowerCase();
+
+        if (repository.findByEmail(cleanEmail).isPresent()) {
+            return;
+        }
+
+        AppUser demo = new AppUser();
+        demo.setEmail(cleanEmail);
+        demo.setUsername("Demo");
+        demo.setPassword(encoder.encode(demoPassword));
+        demo.setRole("DEMO");
+        demo.setApproved(true);
+
+        repository.save(demo);
+
+        log.info(">>> Created DEMO user: {}", cleanEmail);
+    }
+
+    private String capitalise(String name) {
+        if (name == null || name.isBlank()) {
+            return name;
+        }
+        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
 }

@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home - HopeConnect</title>
+    <title>Dashboard - HopeConnect</title>
     <link rel="stylesheet" th:href="@{/css/locker.css}">
 </head>
 <body>
 
 <header class="topbar">
     <div class="topbar-inner">
-        <a class="logo" th:href="@{/}">
+        <a class="logo" th:href="@{/dashboard}">
             <svg class="logo-mark" viewBox="0 0 64 64">
                 <rect x="6" y="20" width="52" height="38" rx="7" fill="#F72585"/>
                 <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
@@ -21,7 +21,7 @@
             <span class="logo-text">Hope<span>Connect</span></span>
         </a>
         <div class="spacer"></div>
-        <span class="who" sec:authentication="name"></span>
+        <span class="who" th:text="${displayName}"></span>
         <form th:action="@{/logout}" method="post" class="inline">
             <button type="submit" class="linkbtn">Log out</button>
         </form>
@@ -30,8 +30,16 @@
 
 <div class="wrap">
 
-    <h1>Welcome back, <span sec:authentication="name"></span></h1>
-    <p class="sub">Your private, encrypted storage. Everything here is visible only to you.</p>
+    <h1 th:if="${firstVisit}">Welcome, <span th:text="${displayName}"></span></h1>
+    <h1 th:unless="${firstVisit}">Welcome back, <span th:text="${displayName}"></span></h1>
+
+    <p class="sub" th:if="${isDemo}">
+        You are signed in to the read-only demo. Browse and download freely.
+        Uploading, editing and deleting are disabled.
+    </p>
+    <p class="sub" th:unless="${isDemo}">
+        Your private storage. Everything here is visible only to you.
+    </p>
 
     <div class="tiles">
 
@@ -44,15 +52,6 @@
             <p>Upload files, organise them into folders, download or delete.</p>
         </a>
 
-        <a class="tile" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">
-            <svg class="tile-icon" viewBox="0 0 64 64">
-                <circle cx="32" cy="20" r="11" fill="#B5007A"/>
-                <path d="M10 56a22 22 0 0 1 44 0z" fill="#F72585"/>
-            </svg>
-            <h3>Pending sign-ups</h3>
-            <p>Review and approve people waiting for access.</p>
-        </a>
-
         <a class="tile" th:href="@{/admin/users}" sec:authorize="hasRole('ADMIN')">
             <svg class="tile-icon" viewBox="0 0 64 64">
                 <circle cx="22" cy="22" r="9" fill="#B5007A"/>
@@ -61,7 +60,7 @@
                 <path d="M38 54a14 14 0 0 1 24 0z" fill="#B5007A"/>
             </svg>
             <h3>Manage users</h3>
-            <p>Disable, re-enable or permanently delete accounts.</p>
+            <p>Invite people, disable accounts or remove them entirely.</p>
         </a>
 
     </div>
@@ -73,9 +72,12 @@
             Signed in as <strong sec:authentication="name"></strong>
         </p>
         <p class="hint" style="margin:0;" sec:authorize="hasRole('ADMIN')">
-            You have administrator access.
+            Administrator access.
         </p>
-        <p class="hint" style="margin:0;" sec:authorize="!hasRole('ADMIN')">
+        <p class="hint" style="margin:0;" sec:authorize="hasRole('DEMO')">
+            Read-only demo account.
+        </p>
+        <p class="hint" style="margin:0;" sec:authorize="hasRole('USER')">
             Standard user account.
         </p>
     </div>

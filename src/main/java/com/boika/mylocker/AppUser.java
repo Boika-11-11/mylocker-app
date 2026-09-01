@@ -1,5 +1,7 @@
 package com.boika.mylocker;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +18,9 @@ public class AppUser {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
@@ -27,12 +32,29 @@ public class AppUser {
     @Column(nullable = false)
     private boolean approved = false;
 
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
+
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "reset_token_expires")
+    private LocalDateTime resetTokenExpires;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim().toLowerCase();
     }
 
     public String getUsername() {
@@ -65,5 +87,29 @@ public class AppUser {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public LocalDateTime getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public LocalDateTime getResetTokenExpires() {
+        return resetTokenExpires;
+    }
+
+    public void setResetTokenExpires(LocalDateTime resetTokenExpires) {
+        this.resetTokenExpires = resetTokenExpires;
     }
 }

@@ -21,19 +21,17 @@
     </div>
 
     <h1>Sign in</h1>
-    <p class="sub">Enter your details to open your account.</p>
+    <p class="sub">Enter your email and password.</p>
 
     <p class="msg-err" th:if="${param.error}">Invalid credentials.</p>
     <p class="msg-ok" th:if="${param.logout}">You have been signed out.</p>
-    <p class="msg-ok" th:if="${param.registered}">
-        Account created. An admin must approve it before you can sign in.
-    </p>
+    <p class="msg-ok" th:if="${param.reset}">Password changed. You can sign in now.</p>
 
     <form th:action="@{/login}" method="post">
 
         <div class="field">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required autofocus>
+            <label for="username">Email address</label>
+            <input type="email" id="username" name="username" required autofocus>
         </div>
 
         <div class="field">
@@ -46,7 +44,15 @@
     </form>
 
     <p class="auth-foot">
-        No account? <a th:href="@{/signup}">Create one</a>
+        <a th:href="@{/forgot-password}">Forgot your password?</a>
+    </p>
+
+    <p class="auth-foot">
+        Access is by invitation. <a th:href="@{/contact}">Request access</a>
+    </p>
+
+    <p class="auth-foot">
+        <a th:href="@{/}">Back to home</a>
     </p>
 
 </div>

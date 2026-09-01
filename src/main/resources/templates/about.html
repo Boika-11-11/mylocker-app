@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About - HopeConnect</title>
+    <link rel="stylesheet" th:href="@{/css/locker.css}">
+</head>
+<body class="public">
+
+<nav class="pubnav">
+    <div class="pubnav-inner">
+        <a class="logo" th:href="@{/}">
+            <svg class="logo-mark" viewBox="0 0 64 64">
+                <rect x="6" y="20" width="52" height="38" rx="7" fill="#F72585"/>
+                <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
+                <circle cx="32" cy="36" r="5" fill="#fff"/>
+                <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
+            </svg>
+            <span class="logo-text">Hope<span>Connect</span></span>
+        </a>
+        <div class="spacer"></div>
+        <a class="navlink" th:href="@{/}">Home</a>
+        <a class="navlink active" th:href="@{/about}">About</a>
+        <a class="navlink" th:href="@{/contact}">Contact</a>
+        <a class="btn-login" th:href="@{/login}">Login</a>
+    </div>
+</nav>
+
+<div class="hero" style="padding-bottom:40px;">
+    <div class="hero-glow" style="opacity:.22;"></div>
+    <div class="hero-content">
+        <p class="eyebrow">About</p>
+        <h1 style="font-size:clamp(30px,5vw,52px);">WHAT THIS IS<br>AND WHY I BUILT IT.</h1>
+    </div>
+</div>
+
+<div class="section" style="padding-top:0;">
+    <h3>The project</h3>
+    <p>
+        HopeConnect is a private storage space for documents and software. I built it
+        end to end as a portfolio project: the authentication, the file handling,
+        the folder structure, the admin tooling and the deployment.
+    </p>
+    <p style="margin-top:16px;">
+        It is deliberately small in scope and deliberately careful in execution.
+        Rather than adding features, the goal was to get the security decisions right
+        and to be able to explain every one of them.
+    </p>
+</div>
+
+<div class="section" style="padding-top:0;">
+    <h2>How it works</h2>
+    <h3>Four ideas hold it together</h3>
+
+    <div class="feature-grid">
+
+        <div class="feature">
+            <h4>Deny by default</h4>
+            <p>
+                Every URL requires authentication unless explicitly opened. New pages are
+                locked automatically rather than needing to be remembered.
+            </p>
+        </div>
+
+        <div class="feature">
+            <h4>Enforce in the query</h4>
+            <p>
+                Ownership checks live inside the database lookup itself, so there is no
+                code path that fetches someone else's file and forgets to check.
+            </p>
+        </div>
+
+        <div class="feature">
+            <h4>Never trust the browser</h4>
+            <p>
+                Hidden fields, disabled buttons and client-side validation are conveniences.
+                Every rule is enforced again on the server.
+            </p>
+        </div>
+
+        <div class="feature">
+            <h4>Allow-list, not block-list</h4>
+            <p>
+                Usernames, file types and routes are validated against what is permitted,
+                not against a list of what is forbidden.
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<div class="section" style="padding-top:0;">
+    <h2>About me</h2>
+    <h3>Boikanyo Sere</h3>
+    <p>
+        I work in software quality assurance and technical support, with ISTQB Foundation
+        and Test Automation Engineer certifications. This project came out of wanting to
+        understand application security from the inside — by building it rather than
+        only testing it.
+    </p>
+    <div class="hero-actions" style="margin-top:26px;">
+        <a class="btn-primary" th:href="@{/contact}">Get in touch</a>
+        <a class="btn-ghost" href="https://github.com/Boika-11-11/mylocker-app" target="_blank" rel="noopener">
+            View the source
+        </a>
+    </div>
+</div>
+
+<footer class="pubfoot">
+    HopeConnect — built by Boikanyo Sere
+</footer>
+
+</body>
+</html>

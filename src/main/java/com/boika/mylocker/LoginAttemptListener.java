@@ -16,13 +16,13 @@ public class LoginAttemptListener {
 
     @EventListener
     public void onFailure(AuthenticationFailureBadCredentialsEvent event) {
-        String username = String.valueOf(event.getAuthentication().getName());
-        attemptService.loginFailed(username);
+        String email = String.valueOf(event.getAuthentication().getName());
+        attemptService.loginFailed(email);
     }
 
     @EventListener
     public void onSuccess(AuthenticationSuccessEvent event) {
-        String username = String.valueOf(event.getAuthentication().getName());
-        attemptService.loginSucceeded(username);
+        String email = String.valueOf(event.getAuthentication().getName());
+        attemptService.loginSucceeded(email);
     }
 }
