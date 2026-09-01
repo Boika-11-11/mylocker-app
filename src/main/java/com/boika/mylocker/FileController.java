@@ -30,11 +30,14 @@ public class FileController {
 
     private final StoredFileRepository fileRepository;
     private final FolderRepository folderRepository;
+    private final FileTypeService fileTypeService;
 
     public FileController(StoredFileRepository fileRepository,
-                          FolderRepository folderRepository) {
+                          FolderRepository folderRepository,
+                          FileTypeService fileTypeService) {
         this.fileRepository = fileRepository;
         this.folderRepository = folderRepository;
+        this.fileTypeService = fileTypeService;
     }
 
     @GetMapping("/files")
@@ -86,6 +89,17 @@ public class FileController {
             return backTo(folderId);
         }
 
+        String originalName = Paths.get(file.getOriginalFilename())
+                .getFileName()
+                .toString();
+
+        if (!fileTypeService.isAllowed(originalName)) {
+            redirect.addFlashAttribute("error",
+                    "That file type is not allowed. You can upload "
+                            + fileTypeService.allowedListForDisplay() + ".");
+            return backTo(folderId);
+        }
+
         Folder folder = null;
         if (folderId != null) {
             folder = folderRepository.findByIdAndOwnerUsername(folderId, owner).orElse(null);
@@ -94,15 +108,7 @@ public class FileController {
         try {
             Files.createDirectories(UPLOAD_DIR);
 
-            String originalName = Paths.get(file.getOriginalFilename())
-                    .getFileName()
-                    .toString();
-
-            String extension = "";
-            int dot = originalName.lastIndexOf('.');
-            if (dot > 0) {
-                extension = originalName.substring(dot);
-            }
+            String extension = "." + fileTypeService.extensionOf(originalName);
 
             String storedName = UUID.randomUUID() + extension;
             Path target = UPLOAD_DIR.resolve(storedName);
@@ -181,6 +187,7 @@ public class FileController {
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .header(HttpHeaders.CONTENT_DISPOSITION,
                             "attachment; filename=\"" + record.getOriginalName() + "\"")
+                    .header("X-Content-Type-Options", "nosniff")
                     .body(resource);
 
         } catch (IOException e) {
