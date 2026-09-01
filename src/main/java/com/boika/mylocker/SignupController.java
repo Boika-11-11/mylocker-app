@@ -12,10 +12,14 @@ public class SignupController {
 
     private final AppUserRepository repository;
     private final PasswordEncoder encoder;
+    private final EmailService emailService;
 
-    public SignupController(AppUserRepository repository, PasswordEncoder encoder) {
+    public SignupController(AppUserRepository repository,
+                            PasswordEncoder encoder,
+                            EmailService emailService) {
         this.repository = repository;
         this.encoder = encoder;
+        this.emailService = emailService;
     }
 
     @GetMapping("/signup")
@@ -65,6 +69,8 @@ public class SignupController {
         user.setApproved(false);
 
         repository.save(user);
+
+        emailService.notifyAdminOfSignup(cleanUsername);
 
         return "redirect:/login?registered";
     }
