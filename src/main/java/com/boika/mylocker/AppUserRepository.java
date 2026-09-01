@@ -10,4 +10,6 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     Optional<AppUser> findByUsername(String username);
 
     List<AppUser> findByApprovedFalse();
+
+    List<AppUser> findAllByOrderByUsernameAsc();
 }

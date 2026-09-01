@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manage users - MyLocker</title>
+    <link rel="stylesheet" th:href="@{/css/locker.css}">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="logo" th:href="@{/}">
+            <svg class="logo-mark" viewBox="0 0 64 64">
+                <rect x="6" y="20" width="52" height="38" rx="7" fill="#F72585"/>
+                <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
+                <circle cx="32" cy="36" r="5" fill="#fff"/>
+                <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
+            </svg>
+            <span class="logo-text">My<span>Locker</span></span>
+        </a>
+        <div class="spacer"></div>
+        <span class="who" sec:authentication="name"></span>
+        <a class="linkbtn" th:href="@{/}">Home</a>
+        <form th:action="@{/logout}" method="post" class="inline">
+            <button type="submit" class="linkbtn">Log out</button>
+        </form>
+    </div>
+</header>
+
+<div class="wrap">
+
+    <h1>Manage users</h1>
+    <p class="sub">Everyone registered on MyLocker. You cannot disable or delete your own account.</p>
+
+    <p class="msg-ok" th:if="${message}" th:text="${message}"></p>
+    <p class="msg-err" th:if="${error}" th:text="${error}"></p>
+
+    <p><a th:href="@{/admin}">View pending sign-ups</a></p>
+
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        <tr th:each="u : ${users}">
+            <td>
+                <span th:text="${u.username}"></span>
+                <span th:if="${u.username == me}" class="hint"> (you)</span>
+            </td>
+            <td th:text="${u.role}"></td>
+            <td>
+                <span th:if="${u.approved}" style="color:#12653A;">Active</span>
+                <span th:unless="${u.approved}" style="color:#A1004F;">Disabled</span>
+            </td>
+            <td class="right">
+
+                <span th:if="${u.username == me}" class="hint">No actions on yourself</span>
+
+                <span th:unless="${u.username == me}">
+
+                    <form th:if="${u.approved}" th:action="@{/admin/users/disable}"
+                          method="post" class="inline"
+                          onsubmit="return confirm('Disable this account? They will not be able to sign in.');">
+                        <input type="hidden" name="id" th:value="${u.id}">
+                        <button type="submit" class="danger">Disable</button>
+                    </form>
+
+                    <form th:unless="${u.approved}" th:action="@{/admin/users/enable}"
+                          method="post" class="inline">
+                        <input type="hidden" name="id" th:value="${u.id}">
+                        <button type="submit">Enable</button>
+                    </form>
+
+                    <form th:action="@{/admin/users/delete}" method="post" class="inline"
+                          onsubmit="return confirm('Delete this account permanently? All their files and folders will be destroyed. This cannot be undone.');">
+                        <input type="hidden" name="id" th:value="${u.id}">
+                        <button type="submit" class="danger">Delete</button>
+                    </form>
+
+                </span>
+
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+</body>
+</html>

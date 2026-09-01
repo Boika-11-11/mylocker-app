@@ -53,6 +53,17 @@
             <p>Review and approve people waiting for access to the locker.</p>
         </a>
 
+        <a class="tile" th:href="@{/admin/users}" sec:authorize="hasRole('ADMIN')">
+            <svg class="tile-icon" viewBox="0 0 64 64">
+                <circle cx="22" cy="22" r="9" fill="#B5007A"/>
+                <circle cx="44" cy="24" r="7" fill="#F72585"/>
+                <path d="M4 54a18 18 0 0 1 36 0z" fill="#F72585"/>
+                <path d="M38 54a14 14 0 0 1 24 0z" fill="#B5007A"/>
+            </svg>
+            <h3>Manage users</h3>
+            <p>Disable, re-enable or permanently delete accounts.</p>
+        </a>
+
     </div>
 
     <h2>Your account</h2>
