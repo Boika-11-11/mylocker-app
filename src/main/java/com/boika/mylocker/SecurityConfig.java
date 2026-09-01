@@ -28,7 +28,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
                         .requestMatchers("/files/upload", "/files/delete", "/files/move",
-                                "/folders/**").hasAnyRole("ADMIN", "USER")
+                                "/files/download/**", "/folders/**").hasAnyRole("ADMIN", "USER")
 
                         .anyRequest().authenticated()
                 )

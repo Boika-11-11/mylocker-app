@@ -33,7 +33,8 @@
 
     <h1>My Files</h1>
     <p class="sub" sec:authorize="hasRole('DEMO')">
-        Read-only demo. You can browse and download, but not upload, move or delete.
+        Read-only demo. Browse the folder structure and file list.
+        Uploading, downloading, editing and deleting are disabled.
     </p>
     <p class="sub" sec:authorize="!hasRole('DEMO')">
         Upload, organise and download your files securely.
@@ -121,7 +122,12 @@
             <td th:text="${#numbers.formatDecimal(f.sizeInBytes / 1024.0, 1, 1)} + ' KB'"></td>
             <td th:text="${#temporals.format(f.uploadedAt, 'yyyy-MM-dd HH:mm')}"></td>
             <td class="right">
-                <a th:href="@{/files/download/{id}(id=${f.id})}">Download</a>
+
+                <a sec:authorize="!hasRole('DEMO')"
+                   th:href="@{/files/download/{id}(id=${f.id})}">Download</a>
+
+                <span sec:authorize="hasRole('DEMO')" class="hint">Download disabled</span>
+
                 <form sec:authorize="!hasRole('DEMO')"
                       th:action="@{/files/delete}" method="post" class="inline"
                       onsubmit="return confirm('Delete this file permanently?');">
@@ -157,8 +163,8 @@
     <input type="hidden" name="id" id="deleteId">
 </form>
 
-<script th:inline="javascript">
-    var isDemo = /*[[${#authorization.expression('hasRole(''DEMO'')')}]]*/ false;
+<script>
+    var isDemo = document.querySelector('#newFolderBtn') === null;
 
     var menu = document.getElementById('menu');
     var targetId = null;
