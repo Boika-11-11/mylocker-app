@@ -38,7 +38,7 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .sessionManagement(session -> session
-                        .maximumSessions(1)
+                        .maximumSessions(3)
                 );
 
         return http.build();
