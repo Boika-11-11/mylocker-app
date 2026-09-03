@@ -13,7 +13,7 @@
     <div class="topbar-inner">
         <a class="logo" th:href="@{/dashboard}">
             <svg class="logo-mark" viewBox="0 0 64 64">
-                <rect x="6" y="20" width="52" height="38" rx="7" fill="#F72585"/>
+                <rect x="6" y="20" width="52" height="38" rx="7" fill="#A8185A"/>
                 <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
                 <circle cx="32" cy="36" r="5" fill="#fff"/>
                 <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
@@ -34,8 +34,8 @@
     <h1 th:unless="${firstVisit}">Welcome back, <span th:text="${displayName}"></span></h1>
 
     <p class="sub" th:if="${isDemo}">
-        You are signed in to the read-only demo. Browse and download freely.
-        Uploading, editing and deleting are disabled.
+        You are signed in to the read-only demo. Browse the folder structure and file list.
+        Uploading, downloading, editing and deleting are disabled.
     </p>
     <p class="sub" th:unless="${isDemo}">
         Your private storage. Everything here is visible only to you.
@@ -54,13 +54,13 @@
 
         <a class="tile" th:href="@{/admin/users}" sec:authorize="hasRole('ADMIN')">
             <svg class="tile-icon" viewBox="0 0 64 64">
-                <circle cx="22" cy="22" r="9" fill="#B5007A"/>
-                <circle cx="44" cy="24" r="7" fill="#F72585"/>
-                <path d="M4 54a18 18 0 0 1 36 0z" fill="#F72585"/>
-                <path d="M38 54a14 14 0 0 1 24 0z" fill="#B5007A"/>
+                <circle cx="22" cy="22" r="9" fill="#7A0F41"/>
+                <circle cx="44" cy="24" r="7" fill="#A8185A"/>
+                <path d="M4 54a18 18 0 0 1 36 0z" fill="#A8185A"/>
+                <path d="M38 54a14 14 0 0 1 24 0z" fill="#7A0F41"/>
             </svg>
-            <h3>Manage users</h3>
-            <p>Invite people, disable accounts or remove them entirely.</p>
+            <h3>People</h3>
+            <p>Approve requests, invite people, disable or remove accounts.</p>
         </a>
 
     </div>

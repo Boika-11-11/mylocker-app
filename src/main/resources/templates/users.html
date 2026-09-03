@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Manage users - HopeConnect</title>
+    <title>People - HopeConnect</title>
     <link rel="stylesheet" th:href="@{/css/locker.css}">
 </head>
 <body>
@@ -13,7 +13,7 @@
     <div class="topbar-inner">
         <a class="logo" th:href="@{/dashboard}">
             <svg class="logo-mark" viewBox="0 0 64 64">
-                <rect x="6" y="20" width="52" height="38" rx="7" fill="#F72585"/>
+                <rect x="6" y="20" width="52" height="38" rx="7" fill="#A8185A"/>
                 <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
                 <circle cx="32" cy="36" r="5" fill="#fff"/>
                 <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
@@ -31,15 +31,47 @@
 
 <div class="wrap">
 
-    <h1>Manage users</h1>
-    <p class="sub">Access is by invitation only. You cannot disable or delete your own account.</p>
+    <h1>People</h1>
+    <p class="sub">Access requests and existing accounts. You cannot disable or delete your own account.</p>
 
     <p class="msg-ok" th:if="${message}" th:text="${message}"></p>
     <p class="msg-err" th:if="${error}" th:text="${error}"></p>
 
-    <div class="card" style="margin-bottom:26px;">
-        <h3 style="margin:0 0 14px;font-size:15px;">Invite someone</h3>
+    <h2>Pending requests</h2>
 
+    <p class="empty" th:if="${requests.isEmpty()}">No pending requests.</p>
+
+    <table th:unless="${requests.isEmpty()}">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Reason</th>
+            <th>Requested</th>
+            <th></th>
+        </tr>
+        <tr th:each="r : ${requests}">
+            <td th:text="${r.name}"></td>
+            <td th:text="${r.email}"></td>
+            <td th:text="${r.reason != null} ? ${r.reason} : '—'"></td>
+            <td th:text="${#temporals.format(r.requestedAt, 'yyyy-MM-dd HH:mm')}"></td>
+            <td class="right">
+                <form th:action="@{/admin/requests/approve}" method="post" class="inline"
+                      onsubmit="return confirm('Approve this request? An account will be created and an invite sent.');">
+                    <input type="hidden" name="id" th:value="${r.id}">
+                    <button type="submit">Approve</button>
+                </form>
+                <form th:action="@{/admin/requests/reject}" method="post" class="inline"
+                      onsubmit="return confirm('Reject this request? They will be emailed a polite decline.');">
+                    <input type="hidden" name="id" th:value="${r.id}">
+                    <button type="submit" class="danger">Reject</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Invite someone</h2>
+
+    <div class="card" style="margin-bottom:26px;">
         <form th:action="@{/admin/users/invite}" method="post"
               style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
 
@@ -62,6 +94,8 @@
         </p>
     </div>
 
+    <h2>Accounts</h2>
+
     <table>
         <tr>
             <th>Name</th>
@@ -80,7 +114,7 @@
             <td>
                 <span th:if="${u.approved and u.lastLoginAt != null}" style="color:#12653A;">Active</span>
                 <span th:if="${u.approved and u.lastLoginAt == null}" style="color:#8A6D00;">Invited</span>
-                <span th:unless="${u.approved}" style="color:#A1004F;">Disabled</span>
+                <span th:unless="${u.approved}" style="color:#7A0F41;">Disabled</span>
             </td>
             <td class="right">
 

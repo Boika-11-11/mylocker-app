@@ -22,7 +22,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
 
-                        .requestMatchers("/", "/about", "/contact",
+                        .requestMatchers("/", "/about", "/contact", "/request-access",
                                 "/login", "/forgot-password", "/reset-password").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")

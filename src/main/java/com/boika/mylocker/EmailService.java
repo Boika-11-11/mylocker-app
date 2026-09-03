@@ -80,6 +80,60 @@ public class EmailService {
     }
 
     @Async
+    public void notifyAdminOfRequest(String name, String email, String reason) {
+
+        if (adminEmail == null || adminEmail.isBlank()) {
+            log.info("No admin email configured. Skipping request notification.");
+            return;
+        }
+
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromAddress);
+            message.setTo(adminEmail);
+            message.setReplyTo(email);
+            message.setSubject("HopeConnect: new access request from " + name);
+            message.setText(
+                    "Someone has requested access to HopeConnect.\n\n"
+                            + "Name: " + name + "\n"
+                            + "Email: " + email + "\n\n"
+                            + "Reason given:\n"
+                            + (reason == null || reason.isBlank() ? "(none)" : reason) + "\n\n"
+                            + "Approve or reject the request here:\n"
+                            + baseUrl + "/admin/requests\n");
+
+            mailSender.send(message);
+            log.info("Access request notification sent for {}", email);
+
+        } catch (Exception e) {
+            log.warn("Could not send access request notification: {}", e.getMessage());
+        }
+    }
+
+    @Async
+    public void sendRequestRejected(String toEmail, String displayName) {
+
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromAddress);
+            message.setTo(toEmail);
+            message.setSubject("HopeConnect: about your access request");
+            message.setText(
+                    "Hello " + displayName + ",\n\n"
+                            + "Thank you for your interest in HopeConnect.\n\n"
+                            + "Access is not being granted at this time.\n\n"
+                            + "If you believe this is a mistake, you are welcome to get in touch\n"
+                            + "through the contact form at " + baseUrl + "/contact\n");
+
+            mailSender.send(message);
+            log.info("Rejection email sent to {}", toEmail);
+
+        } catch (Exception e) {
+            log.warn("Could not send rejection email: {}", e.getMessage());
+        }
+    }
+
+    @Async
     public void sendContactMessage(String fromName, String fromEmail, String body) {
 
         if (adminEmail == null || adminEmail.isBlank()) {

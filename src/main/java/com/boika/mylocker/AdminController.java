@@ -27,26 +27,83 @@ public class AdminController {
     private final AppUserRepository userRepository;
     private final StoredFileRepository fileRepository;
     private final FolderRepository folderRepository;
+    private final AccessRequestRepository requestRepository;
     private final PasswordEncoder encoder;
     private final EmailService emailService;
 
     public AdminController(AppUserRepository userRepository,
                            StoredFileRepository fileRepository,
                            FolderRepository folderRepository,
+                           AccessRequestRepository requestRepository,
                            PasswordEncoder encoder,
                            EmailService emailService) {
         this.userRepository = userRepository;
         this.fileRepository = fileRepository;
         this.folderRepository = folderRepository;
+        this.requestRepository = requestRepository;
         this.encoder = encoder;
         this.emailService = emailService;
     }
 
     @GetMapping("/admin/users")
-    public String showAllUsers(Principal principal, Model model) {
+    public String showAdminPage(Principal principal, Model model) {
+        model.addAttribute("requests", requestRepository.findAllByOrderByRequestedAtDesc());
         model.addAttribute("users", userRepository.findAllByOrderByUsernameAsc());
         model.addAttribute("me", principal.getName());
         return "users";
+    }
+
+    @PostMapping("/admin/requests/approve")
+    @Transactional
+    public String approveRequest(@RequestParam Long id, RedirectAttributes redirect) {
+
+        AccessRequest request = requestRepository.findById(id).orElse(null);
+
+        if (request == null) {
+            redirect.addFlashAttribute("error", "Request not found.");
+            return "redirect:/admin/users";
+        }
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            requestRepository.delete(request);
+            redirect.addFlashAttribute("error", "That email already has an account.");
+            return "redirect:/admin/users";
+        }
+
+        String token = UUID.randomUUID().toString();
+
+        AppUser user = new AppUser();
+        user.setEmail(request.getEmail());
+        user.setUsername(request.getName());
+        user.setPassword(encoder.encode(UUID.randomUUID().toString()));
+        user.setRole("USER");
+        user.setApproved(true);
+        user.setResetToken(token);
+        user.setResetTokenExpires(LocalDateTime.now().plusMinutes(INVITE_MINUTES));
+
+        userRepository.save(user);
+
+        emailService.sendInvite(user.getEmail(), user.getUsername(), token);
+
+        requestRepository.delete(request);
+
+        redirect.addFlashAttribute("message",
+                "Approved " + user.getUsername() + ". They have 30 minutes to set a password.");
+
+        return "redirect:/admin/users";
+    }
+
+    @PostMapping("/admin/requests/reject")
+    public String rejectRequest(@RequestParam Long id, RedirectAttributes redirect) {
+
+        requestRepository.findById(id).ifPresent(request -> {
+            emailService.sendRequestRejected(request.getEmail(), request.getName());
+            requestRepository.delete(request);
+            redirect.addFlashAttribute("message",
+                    "Rejected the request from " + request.getName() + ".");
+        });
+
+        return "redirect:/admin/users";
     }
 
     @PostMapping("/admin/users/invite")

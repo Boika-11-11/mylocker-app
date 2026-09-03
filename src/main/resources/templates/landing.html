@@ -11,12 +11,7 @@
 <nav class="pubnav">
     <div class="pubnav-inner">
         <a class="logo" th:href="@{/}">
-            <svg class="logo-mark pulse" viewBox="0 0 64 64">
-                <rect x="6" y="20" width="52" height="38" rx="7" fill="#F72585"/>
-                <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
-                <circle cx="32" cy="36" r="5" fill="#fff"/>
-                <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
-            </svg>
+            <img class="logo-mark" th:src="@{/images/logo.png}" alt="HopeConnect">
             <span class="logo-text">Hope<span>Connect</span></span>
         </a>
         <div class="spacer"></div>
@@ -28,7 +23,7 @@
 </nav>
 
 <div class="hero">
-    <img class="hero-img" th:src="@{/images/ring.png}" alt="" aria-hidden="true">
+    <img class="hero-logo" th:src="@{/images/logo.png}" alt="" aria-hidden="true">
     <div class="hero-content">
         <p class="eyebrow">Secure Document Storage</p>
         <h1>PRIVATE STORAGE.<br>TOTAL CONTROL.<br>INVITE ONLY.</h1>

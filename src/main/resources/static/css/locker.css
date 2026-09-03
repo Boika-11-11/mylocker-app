@@ -1,7 +1,7 @@
 :root {
-    --pink: #F72585;
-    --pink-dark: #B5007A;
-    --pink-soft: #FDEAF1;
+    --pink: #A8185A;
+    --pink-dark: #7A0F41;
+    --pink-soft: #F7E0EA;
     --navy: #0B0620;
     --navy-2: #150B33;
     --plum: #2B0B3F;
@@ -43,11 +43,11 @@ body.public::before {
     position: fixed;
     top: -20%;
     left: -10%;
-    width: 70vw;
-    height: 70vw;
+    width: 80vw;
+    height: 80vw;
     background: radial-gradient(circle at 35% 35%,
-    rgba(183, 33, 255, .30), transparent 62%);
-    filter: blur(90px);
+    rgba(150, 40, 220, .40), transparent 62%);
+    filter: blur(80px);
     pointer-events: none;
     z-index: 0;
 }
@@ -57,11 +57,11 @@ body.public::after {
     position: fixed;
     bottom: -25%;
     right: -15%;
-    width: 65vw;
-    height: 65vw;
+    width: 75vw;
+    height: 75vw;
     background: radial-gradient(circle at 60% 60%,
-    rgba(33, 212, 253, .22), transparent 60%);
-    filter: blur(100px);
+    rgba(200, 30, 110, .30), transparent 60%);
+    filter: blur(90px);
     pointer-events: none;
     z-index: 0;
 }
@@ -106,7 +106,7 @@ body.public::after {
     font-size: 14px;
     font-weight: 500;
     text-decoration: none;
-    box-shadow: 0 4px 18px rgba(247, 37, 133, .35);
+    box-shadow: 0 4px 14px rgba(168, 24, 90, .25);
 }
 
 .btn-login:hover {
@@ -121,17 +121,18 @@ body.public::after {
     z-index: 1;
 }
 
-.hero-img {
+.hero-logo {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 940px;
-    max-width: 118%;
-    opacity: .34;
+    width: 620px;
+    max-width: 92vw;
+    opacity: .22;
     pointer-events: none;
     user-select: none;
     z-index: 0;
+    filter: drop-shadow(0 0 60px rgba(120, 220, 120, .35));
 }
 
 .hero-content {
@@ -154,14 +155,16 @@ body.public::after {
     margin: 0 0 26px;
     font-weight: 400;
     color: #fff;
-    text-shadow: 0 2px 30px rgba(11, 6, 32, .85);
+    text-shadow: 0 2px 40px rgba(11, 6, 32, .95),
+    0 0 14px rgba(11, 6, 32, .8);
 }
 
 .hero p.lead {
     font-size: 17px;
-    color: #C9C0E4;
+    color: #D6CDEF;
     max-width: 560px;
     margin: 0 0 34px;
+    text-shadow: 0 1px 16px rgba(11, 6, 32, .9);
 }
 
 .hero-actions {
@@ -183,7 +186,7 @@ body.public::after {
 .btn-primary {
     background: var(--pink);
     color: #fff;
-    box-shadow: 0 6px 24px rgba(247, 37, 133, .35);
+    box-shadow: 0 6px 18px rgba(168, 24, 90, .28);
 }
 
 .btn-primary:hover {
@@ -191,9 +194,9 @@ body.public::after {
 }
 
 .btn-ghost {
-    border: 1px solid rgba(255, 255, 255, .22);
+    border: 1px solid rgba(255, 255, 255, .25);
     color: #E4DEF5;
-    background: rgba(255, 255, 255, .05);
+    background: rgba(11, 6, 32, .45);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 }
@@ -243,20 +246,20 @@ body.public::after {
 }
 
 .feature {
-    background: rgba(255, 255, 255, .045);
-    border: 1px solid rgba(255, 255, 255, .10);
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .12);
     border-radius: 16px;
     padding: 22px;
-    backdrop-filter: blur(16px) saturate(130%);
-    -webkit-backdrop-filter: blur(16px) saturate(130%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .10),
-    0 10px 30px rgba(0, 0, 0, .28);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12),
+    0 10px 30px rgba(0, 0, 0, .32);
     transition: transform .18s, border-color .18s;
 }
 
 .feature:hover {
     transform: translateY(-3px);
-    border-color: rgba(247, 37, 133, .45);
+    border-color: rgba(168, 24, 90, .6);
 }
 
 .feature h4 {
@@ -269,20 +272,20 @@ body.public::after {
 .feature p {
     margin: 0;
     font-size: 14px;
-    color: #B4A9D6;
+    color: #BFB4E0;
 }
 
 .demo-box {
-    background: rgba(255, 255, 255, .05);
-    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(11, 6, 32, .55);
+    border: 1px solid rgba(255, 255, 255, .16);
     border-radius: 16px;
     padding: 22px 24px;
     margin-top: 26px;
     max-width: 460px;
-    backdrop-filter: blur(18px) saturate(130%);
-    -webkit-backdrop-filter: blur(18px) saturate(130%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12),
-    0 12px 36px rgba(0, 0, 0, .32);
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14),
+    0 12px 36px rgba(0, 0, 0, .38);
 }
 
 .demo-box h4 {
@@ -294,13 +297,13 @@ body.public::after {
 .demo-cred {
     font-family: ui-monospace, Consolas, monospace;
     font-size: 14px;
-    color: var(--pink);
+    color: #E894B8;
     display: block;
     margin: 4px 0;
 }
 
 .demo-box small {
-    color: #9C90BF;
+    color: #B2A6D4;
     font-size: 13px;
     display: block;
     margin-top: 12px;
@@ -314,13 +317,11 @@ body.public::after {
 }
 
 .contact-card {
-    background: rgba(183, 156, 255, .88);
+    background: rgba(183, 156, 255, .92);
     color: #14082E;
     border-radius: 10px;
     padding: 22px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
 }
 
 .contact-card .label {
@@ -342,7 +343,7 @@ body.public::after {
     border-top: 1px solid rgba(255, 255, 255, .08);
     padding: 30px 24px;
     text-align: center;
-    color: #6E6392;
+    color: #7B6FA0;
     font-size: 13px;
 }
 
@@ -379,7 +380,7 @@ body.public::after {
     font-size: 18px;
     font-weight: 700;
     letter-spacing: -.2px;
-    color: var(--pink);
+    color: #E0518C;
 }
 
 .logo-text span {
@@ -459,7 +460,7 @@ h1 {
 
 .msg-err {
     background: var(--pink-soft);
-    color: #A1004F;
+    color: #7A0F41;
 }
 
 .uploader {
@@ -604,7 +605,7 @@ h1 {
 }
 
 .ctx button.danger-text {
-    color: #A1004F;
+    color: #7A0F41;
 }
 
 .hidden {
@@ -679,8 +680,8 @@ button.block {
 
 button.danger {
     background: #fff;
-    color: #A1004F;
-    border: 1px solid #F3C2D8;
+    color: #7A0F41;
+    border: 1px solid #E8BDD0;
     padding: 5px 11px;
     font-size: 13px;
 }
@@ -751,13 +752,13 @@ td a:hover {
     align-items: center;
     justify-content: center;
     padding: 24px;
-    background: linear-gradient(150deg, var(--navy) 0%, #2B1259 55%, #6A1560 100%);
+    background: linear-gradient(150deg, var(--navy) 0%, #2E1055 52%, #5C1148 100%);
 }
 
 .auth-box {
     background: #fff;
     border-radius: 14px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
     padding: 34px 30px;
     width: 100%;
     max-width: 380px;
@@ -858,6 +859,61 @@ td a:hover {
     color: var(--muted);
 }
 
+.pw-wrap {
+    position: relative;
+}
+
+.pw-wrap input {
+    padding-right: 44px;
+}
+
+.pw-toggle {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    color: var(--muted);
+    line-height: 0;
+    border-radius: 6px;
+}
+
+.pw-toggle:hover {
+    background: var(--pink-soft);
+    color: var(--pink-dark);
+}
+
+.pw-toggle:focus-visible {
+    outline: 2px solid var(--pink);
+    outline-offset: -1px;
+}
+
+.pw-toggle svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.pw-toggle .icon-hide {
+    display: none;
+}
+
+.pw-toggle.showing .icon-show {
+    display: none;
+}
+
+.pw-toggle.showing .icon-hide {
+    display: block;
+}
+
 @keyframes pulse-lock {
     0%, 100% { transform: scale(1); }
     50%      { transform: scale(1.08); }
@@ -874,14 +930,14 @@ td a:hover {
 }
 
 @media (max-width: 900px) {
-    .hero-img {
-        width: 620px;
-        opacity: .22;
+    .hero-logo {
+        width: 420px;
+        opacity: .16;
     }
 }
 
 @media (max-width: 600px) {
-    .hero-img {
+    .hero-logo {
         display: none;
     }
 }
