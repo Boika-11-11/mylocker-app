@@ -128,12 +128,10 @@ body.public::after {
     transform: translate(-50%, -50%);
     width: 620px;
     max-width: 92vw;
-    opacity: .22;
-    pointer-events: none;
+    opacity: .55;    pointer-events: none;
     user-select: none;
     z-index: 0;
-    filter: drop-shadow(0 0 60px rgba(120, 220, 120, .35));
-}
+    filter: drop-shadow(0 0 70px rgba(200, 30, 110, .45));}
 
 .hero-content {
     position: relative;
@@ -932,8 +930,7 @@ td a:hover {
 @media (max-width: 900px) {
     .hero-logo {
         width: 420px;
-        opacity: .16;
-    }
+        opacity: .4;    }
 }
 
 @media (max-width: 600px) {
