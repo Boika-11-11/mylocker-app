@@ -125,8 +125,7 @@ body.public::after {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 620px;
+    transform: translate(-15%, -50%);    width: 620px;
     max-width: 92vw;
     opacity: .55;    pointer-events: none;
     user-select: none;
@@ -391,8 +390,7 @@ body.public::after {
 
 .who {
     font-size: 13px;
-    opacity: .75;
-}
+    opacity: 1;}
 
 .topbar .linkbtn {
     background: rgba(255, 255, 255, .1);
