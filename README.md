@@ -26,7 +26,7 @@ Each of these was implemented deliberately rather than inherited from a framewor
 | Broken object-level access | Ownership is a condition of the database query, not a separate check that can be skipped |
 | Path traversal | Uploaded filenames are never used as disk paths; files are stored under generated UUIDs |
 | CSRF | Tokens on every state-changing form, with SameSite and HttpOnly session cookies |
-| Credential stuffing | Five failed sign-ins locks the account for fifteen minutes. Currently applies inconsistently across account roles — see Known limitations |
+| Credential stuffing | Five failed sign-ins locks the account for fifteen minutes |
 | Malicious uploads | Allow-list of permitted file types; web-executable formats refused |
 | Account recovery | Single-use tokens expiring after 30 minutes; responses never reveal whether an address exists |
 | Secrets | Read from environment variables. Nothing sensitive is committed |
@@ -84,14 +84,16 @@ mylocker.admin.email=you@example.com
 
 The application has been tested against the live deployment using a documented test suite covering authentication, access control, session management and password recovery. Test cases and defects are tracked in Jira.
 
-Defects found and resolved during testing include an invite-email delivery failure caused by an unverified sending domain. One defect remains open, covering inconsistent account lockout behaviour.
+One defect was found and fixed: invite emails were failing silently because the application was sending from a shared test address rather than a verified domain.
+
+Two further defects were retested and reclassified after the evidence contradicted the original diagnosis. One could not be reproduced. The other, still open, concerns how the account lockout is surfaced to the user rather than whether it works.
 
 ## Known limitations
 
 - Uploaded files are stored on the application's own volume rather than object storage
 - No audit log of administrative actions
 - Session state and rate-limit counters are held in memory, so they reset on restart and would need a shared store across multiple instances
-- Account lockout after repeated failed sign-ins does not trigger consistently across all account roles; identified during testing and tracked as an open defect
+- The account lockout is enforced correctly, but a locked-out user sees a generic error rather than being told the account is locked. Kept deliberately for now — a lockout-specific message would confirm to an attacker that the account exists. Tracked as an open defect pending that trade-off decision
 - No malware scanning on uploaded files beyond file-type restriction
 
 ## Author
