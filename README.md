@@ -2,9 +2,9 @@
 
 A private, invite-only file and document store built with Spring Boot, Spring Security and PostgreSQL.
 
-**Live:** https://hopeconnect.up.railway.app
+**Live:** https://www.hopeconnects.co.za
 
-**Read-only demo:** `demo@hopeconnect.dev` / `Demo1234!`
+**Read-only demo:** `demo@hopeconnect.dev` / `N3wl@ndz@#P12345`
 
 ---
 
@@ -26,7 +26,7 @@ Each of these was implemented deliberately rather than inherited from a framewor
 | Broken object-level access | Ownership is a condition of the database query, not a separate check that can be skipped |
 | Path traversal | Uploaded filenames are never used as disk paths; files are stored under generated UUIDs |
 | CSRF | Tokens on every state-changing form, with SameSite and HttpOnly session cookies |
-| Credential stuffing | Five failed sign-ins locks the account for fifteen minutes |
+| Credential stuffing | Five failed sign-ins locks the account for fifteen minutes. Currently applies inconsistently across account roles — see Known limitations |
 | Malicious uploads | Allow-list of permitted file types; web-executable formats refused |
 | Account recovery | Single-use tokens expiring after 30 minutes; responses never reveal whether an address exists |
 | Secrets | Read from environment variables. Nothing sensitive is committed |
@@ -80,11 +80,19 @@ mylocker.admin.email=you@example.com
 
 3. Run `MylockerApplication`. The schema and administrator account are created on first startup.
 
+## Testing
+
+The application has been tested against the live deployment using a documented test suite covering authentication, access control, session management and password recovery. Test cases and defects are tracked in Jira.
+
+Defects found and resolved during testing include an invite-email delivery failure caused by an unverified sending domain. One defect remains open, covering inconsistent account lockout behaviour.
+
 ## Known limitations
 
 - Uploaded files are stored on the application's own volume rather than object storage
 - No audit log of administrative actions
 - Session state and rate-limit counters are held in memory, so they reset on restart and would need a shared store across multiple instances
+- Account lockout after repeated failed sign-ins does not trigger consistently across all account roles; identified during testing and tracked as an open defect
+- No malware scanning on uploaded files beyond file-type restriction
 
 ## Author
 
