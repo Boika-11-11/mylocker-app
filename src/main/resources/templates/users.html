@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>People - HopeConnect</title>
     <link rel="stylesheet" th:href="@{/css/locker.css}">
+    <script th:src="@{/js/theme.js}"></script>
 </head>
 <body>
 
@@ -29,8 +30,11 @@
     </div>
 </header>
 
-<div class="wrap">
+<div class="app-shell">
 
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="main-content">
     <h1>People</h1>
     <p class="sub">Access requests and existing accounts. You cannot disable or delete your own account.</p>
 
@@ -147,7 +151,11 @@
         </tr>
     </table>
 
+    </main>
+
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

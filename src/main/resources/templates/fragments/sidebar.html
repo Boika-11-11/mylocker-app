@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<!-- Sidebar fragment: use with <div th:replace="~{fragments/sidebar :: sidebar}"></div> -->
+<aside class="sidebar" th:fragment="sidebar">
+
+    <div class="sidebar-section">
+        <div class="sidebar-heading">Workspace</div>
+
+        <a th:href="@{/dashboard}"
+           th:classappend="${currentPage == 'dashboard'} ? 'active'">
+            <svg class="icon" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="8" height="8" rx="1.5"/>
+                <rect x="13" y="3" width="8" height="5" rx="1.5"/>
+                <rect x="13" y="10" width="8" height="11" rx="1.5"/>
+                <rect x="3" y="13" width="8" height="8" rx="1.5"/>
+            </svg>
+            <span>Dashboard</span>
+        </a>
+
+        <a th:href="@{/files}"
+           th:classappend="${currentPage == 'files'} ? 'active'">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M2 6a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/>
+            </svg>
+            <span>My Files</span>
+        </a>
+
+        <a th:href="@{/admin/users}"
+           sec:authorize="hasRole('ADMIN')"
+           th:classappend="${currentPage == 'people'} ? 'active'">
+            <svg class="icon" viewBox="0 0 24 24">
+                <circle cx="9" cy="8" r="4"/>
+                <path d="M1 22a8 8 0 0 1 16 0z"/>
+                <circle cx="17" cy="10" r="3"/>
+                <path d="M15 22a6 6 0 0 1 8-6z"/>
+            </svg>
+            <span>People</span>
+        </a>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-heading">Account</div>
+
+        <a th:href="@{/settings}"
+           th:classappend="${currentPage == 'settings'} ? 'active'">
+            <svg class="icon" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span>Settings</span>
+        </a>
+    </div>
+
+</aside>
+
+</body>
+</html>

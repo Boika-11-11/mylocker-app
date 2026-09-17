@@ -72,6 +72,7 @@ public class FileController {
         model.addAttribute("allFolders", folderRepository.findByOwnerUsernameOrderByNameAsc(owner));
         model.addAttribute("files", files);
         model.addAttribute("canCreateSubfolder", current == null || current.getParent() == null);
+        model.addAttribute("currentPage", "files");
 
         return "files";
     }

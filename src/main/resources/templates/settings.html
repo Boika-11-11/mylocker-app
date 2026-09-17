@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Settings - HopeConnect</title>
+    <link rel="stylesheet" th:href="@{/css/locker.css}">
+    <!-- Apply theme before paint to avoid flash -->
+    <script th:src="@{/js/theme.js}"></script>
+</head>
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="logo" th:href="@{/dashboard}">
+            <svg class="logo-mark" viewBox="0 0 64 64">
+                <rect x="6" y="20" width="52" height="38" rx="7" fill="#A8185A"/>
+                <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
+                <circle cx="32" cy="36" r="5" fill="#fff"/>
+                <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
+            </svg>
+            <span class="logo-text">Hope<span>Connect</span></span>
+        </a>
+        <div class="spacer"></div>
+        <span class="who" sec:authentication="name"></span>
+        <form th:action="@{/logout}" method="post" class="inline">
+            <button type="submit" class="linkbtn">Log out</button>
+        </form>
+    </div>
+</header>
+
+<div class="app-shell">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="main-content">
+
+        <h1>Settings</h1>
+        <p class="sub">Personalize how HopeConnect looks and works for you.</p>
+
+        <div class="settings-section">
+            <h3>Appearance</h3>
+            <p>Choose how HopeConnect looks. Your choice is saved to this browser.</p>
+
+            <div class="theme-options">
+                <button type="button" class="theme-option" data-theme="light">
+                    <span>☀️</span> Light
+                </button>
+                <button type="button" class="theme-option" data-theme="dark">
+                    <span>🌙</span> Dark
+                </button>
+                <button type="button" class="theme-option" data-theme="system">
+                    <span>💻</span> System
+                </button>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Account</h3>
+            <p>You are signed in as <strong sec:authentication="name"></strong>.</p>
+        </div>
+
+        <div class="settings-section">
+            <h3>More settings coming soon</h3>
+            <p>Notifications, storage, and sharing options will appear here.</p>
+        </div>
+
+    </main>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:inline="none">
+    (function () {
+        var opts = document.querySelectorAll('.theme-option');
+        var current = window.HopeConnectTheme.get();
+
+        function paint() {
+            opts.forEach(function (btn) {
+                var t = btn.getAttribute('data-theme');
+                btn.classList.toggle('selected', t === current);
+            });
+        }
+
+        opts.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                current = btn.getAttribute('data-theme');
+                window.HopeConnectTheme.set(current);
+                paint();
+            });
+        });
+
+        paint();
+    })();
+</script>
+
+</body>
+</html>

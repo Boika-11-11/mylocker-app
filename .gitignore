@@ -37,3 +37,10 @@ uploads/
 *.trace.db
 application-local.properties
 *.env
+# Local dev config — never commit
+src/main/resources/application-local.properties
+data/
+
+# Local dev config - never commit
+src/main/resources/application-local.properties
+data/

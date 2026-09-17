@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My Files - HopeConnect</title>
     <link rel="stylesheet" th:href="@{/css/locker.css}">
+    <script th:src="@{/js/theme.js}"></script>
 </head>
 <body>
 
@@ -13,8 +14,7 @@
     <div class="topbar-inner">
         <a class="logo" th:href="@{/dashboard}">
             <svg class="logo-mark" viewBox="0 0 64 64">
-                <rect x="6" y="20" width="52" height="38" rx="7" fill="#F72585"/>
-                <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
+                <rect x="6" y="20" width="52" height="38" rx="7" fill="#A8185A"/>                <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
                 <circle cx="32" cy="36" r="5" fill="#fff"/>
                 <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
             </svg>
@@ -29,8 +29,11 @@
     </div>
 </header>
 
-<div class="wrap">
+<div class="app-shell">
 
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="main-content">
     <h1>My Files</h1>
     <p class="sub" sec:authorize="hasRole('DEMO')">
         Read-only demo. Browse the folder structure and file list.
@@ -140,7 +143,11 @@
         </tr>
     </table>
 
+    </main>
+
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <div id="menu" class="ctx">
     <button type="button" id="ctxOpen">Open</button>

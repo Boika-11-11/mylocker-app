@@ -50,6 +50,7 @@ public class AdminController {
         model.addAttribute("requests", requestRepository.findAllByOrderByRequestedAtDesc());
         model.addAttribute("users", userRepository.findAllByOrderByUsernameAsc());
         model.addAttribute("me", principal.getName());
+        model.addAttribute("currentPage", "people");
         return "users";
     }
 
