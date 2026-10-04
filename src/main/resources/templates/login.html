@@ -23,8 +23,7 @@
     <h1>Sign in</h1>
     <p class="sub">Enter your email and password.</p>
 
-    <p class="msg-err" th:if="${param.error}">Invalid credentials.</p>
-    <p class="msg-err" th:if="${param.locked}">Too many failed attempts. This account is locked for 15 minutes.</p>
+    <p class="msg-err" th:if="${param.error}">Invalid credentials. If you have tried several times, wait 15 minutes before trying again.</p>
     <p class="msg-ok" th:if="${param.logout}">You have been signed out.</p>
     <p class="msg-ok" th:if="${param.reset}">Password changed. You can sign in now.</p>
 
