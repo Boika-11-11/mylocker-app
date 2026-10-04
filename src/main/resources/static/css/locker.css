@@ -1374,3 +1374,57 @@ body.dark .sidebar a.active {
 }
 
 .theme-options
+
+    /* ============================================================
+       DARK MODE FIXES
+       ============================================================ */
+body.dark .folder-card,
+body.dark .folder-name {
+    color: var(--text);
+}
+
+body.dark .folder-card:hover {
+    background: rgba(255, 255, 255, .05);
+    box-shadow: none;
+}
+
+body.dark .uploader {
+    background: var(--card);
+    border-color: var(--border);
+}
+
+body.dark table {
+    background: var(--card);
+    border-color: var(--border);
+    color: var(--text);
+}
+
+body.dark th {
+    background: var(--bg-alt);
+    color: var(--text-muted);
+}
+
+body.dark th,
+body.dark td {
+    border-bottom-color: var(--border);
+}
+
+body.dark .crumbs,
+body.dark .empty,
+body.dark .hint,
+body.dark .sub {
+    color: var(--text-muted);
+}
+
+body.dark .ctx {
+    background: var(--card);
+    border-color: var(--border);
+}
+
+body.dark .ctx button {
+    color: var(--text);
+}
+
+body.dark .ctx button:hover {
+    background: rgba(255, 255, 255, .06);
+}
