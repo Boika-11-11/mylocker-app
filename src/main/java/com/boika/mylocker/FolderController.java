@@ -97,7 +97,7 @@ public class FolderController {
 
         Long parentId = folder.getParent() == null ? null : folder.getParent().getId();
 
-        if (!folder.getName().equals(cleanName)) {
+        if (!folder.getName().equalsIgnoreCase(cleanName)) {
 
             boolean taken = (parentId == null)
                     ? folderRepository.existsByOwnerUsernameAndNameAndParentIsNull(owner, cleanName)
@@ -141,6 +141,7 @@ public class FolderController {
 
         List<Folder> children = folderRepository.findByParentId(folder.getId());
         for (Folder child : children) {
+            child.setName(uniqueTopLevelName(owner, child.getName()));
             child.setParent(null);
             folderRepository.save(child);
         }
@@ -154,6 +155,26 @@ public class FolderController {
                         + children.size() + " sub-folder(s) promoted to top level.");
 
         return backTo(grandparentId);
+    }
+
+    private String uniqueTopLevelName(String owner, String wanted) {
+
+        String candidate = wanted;
+        int counter = 2;
+
+        while (folderRepository.existsByOwnerUsernameAndNameAndParentIsNull(owner, candidate)) {
+
+            String suffix = " (" + counter + ")";
+
+            String base = wanted.length() + suffix.length() > 40
+                    ? wanted.substring(0, 40 - suffix.length())
+                    : wanted;
+
+            candidate = base + suffix;
+            counter++;
+        }
+
+        return candidate;
     }
 
     private String backTo(Long folderId) {

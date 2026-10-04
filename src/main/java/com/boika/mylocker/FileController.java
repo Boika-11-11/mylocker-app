@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.core.io.Resource;
@@ -27,6 +29,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class FileController {
 
     private static final Path UPLOAD_DIR = Paths.get("uploads");
+
+    private static final Map<String, String> INLINE_TYPES = Map.ofEntries(
+            Map.entry("pdf", "application/pdf"),
+            Map.entry("jpg", "image/jpeg"),
+            Map.entry("jpeg", "image/jpeg"),
+            Map.entry("png", "image/png"),
+            Map.entry("gif", "image/gif"),
+            Map.entry("webp", "image/webp"),
+            Map.entry("bmp", "image/bmp"),
+            Map.entry("mp4", "video/mp4"),
+            Map.entry("webm", "video/webm"),
+            Map.entry("mp3", "audio/mpeg"),
+            Map.entry("wav", "audio/wav"),
+            Map.entry("txt", "text/plain")
+    );
 
     private final StoredFileRepository fileRepository;
     private final FolderRepository folderRepository;
@@ -165,6 +182,47 @@ public class FileController {
         return backTo(folderId);
     }
 
+    @GetMapping("/files/open/{id}")
+    public ResponseEntity<Resource> open(@PathVariable Long id, Principal principal) {
+
+        StoredFile record = fileRepository
+                .findByIdAndOwnerUsername(id, principal.getName())
+                .orElse(null);
+
+        if (record == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            Path path = UPLOAD_DIR.resolve(record.getStoredName());
+            Resource resource = new UrlResource(path.toUri());
+
+            if (!resource.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String ext = extensionOf(record.getOriginalName());
+            String inlineType = INLINE_TYPES.get(ext);
+            boolean renderInline = inlineType != null;
+
+            MediaType type = renderInline
+                    ? MediaType.parseMediaType(inlineType)
+                    : MediaType.APPLICATION_OCTET_STREAM;
+
+            String disposition = (renderInline ? "inline" : "attachment")
+                    + "; filename=\"" + record.getOriginalName() + "\"";
+
+            return ResponseEntity.ok()
+                    .contentType(type)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, disposition)
+                    .header("X-Content-Type-Options", "nosniff")
+                    .body(resource);
+
+        } catch (IOException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/files/download/{id}")
     public ResponseEntity<Resource> download(@PathVariable Long id, Principal principal) {
 
@@ -213,6 +271,11 @@ public class FileController {
                 });
 
         return backTo(folderId);
+    }
+
+    private String extensionOf(String name) {
+        int dot = name.lastIndexOf('.');
+        return dot < 0 ? "" : name.substring(dot + 1).toLowerCase(Locale.ROOT);
     }
 
     private String backTo(Long folderId) {

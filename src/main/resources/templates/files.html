@@ -14,7 +14,8 @@
     <div class="topbar-inner">
         <a class="logo" th:href="@{/dashboard}">
             <svg class="logo-mark" viewBox="0 0 64 64">
-                <rect x="6" y="20" width="52" height="38" rx="7" fill="#A8185A"/>                <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
+                <rect x="6" y="20" width="52" height="38" rx="7" fill="#A8185A"/>
+                <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
                 <circle cx="32" cy="36" r="5" fill="#fff"/>
                 <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
             </svg>
@@ -34,114 +35,120 @@
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
     <main class="main-content">
-    <h1>My Files</h1>
-    <p class="sub" sec:authorize="hasRole('DEMO')">
-        Read-only demo. Browse the folder structure and file list.
-        Uploading, downloading, editing and deleting are disabled.
-    </p>
-    <p class="sub" sec:authorize="!hasRole('DEMO')">
-        Upload, organise and download your files securely.
-    </p>
+        <h1>My Files</h1>
+        <p class="sub" sec:authorize="hasRole('DEMO')">
+            Read-only demo. Browse the folder structure and open files.
+            Uploading, downloading, editing and deleting are disabled.
+        </p>
+        <p class="sub" sec:authorize="!hasRole('DEMO')">
+            Upload, organise and download your files securely.
+        </p>
 
-    <p class="msg-ok" th:if="${message}" th:text="${message}"></p>
-    <p class="msg-err" th:if="${error}" th:text="${error}"></p>
+        <p class="msg-ok" th:if="${message}" th:text="${message}"></p>
+        <p class="msg-err" th:if="${error}" th:text="${error}"></p>
 
-    <div class="uploader" sec:authorize="!hasRole('DEMO')">
-        <form th:action="@{/files/upload}" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" required>
-            <select name="folderId">
-                <option value="">Unfiled</option>
-                <option th:each="box : ${allFolders}"
-                        th:value="${box.id}"
-                        th:text="${box.parent == null} ? ${box.name} : ${box.parent.name} + ' / ' + ${box.name}"
-                        th:selected="${currentFolder != null and currentFolder.id == box.id}"></option>
-            </select>
-            <button type="submit">Upload</button>
-        </form>
-        <span class="hint">Max 10MB. Documents, images, media, archives and installers.</span>
-    </div>
+        <div class="uploader" sec:authorize="!hasRole('DEMO')">
+            <form th:action="@{/files/upload}" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" required>
+                <select name="folderId">
+                    <option value="">Unfiled</option>
+                    <option th:each="box : ${allFolders}"
+                            th:value="${box.id}"
+                            th:text="${box.parent == null} ? ${box.name} : ${box.parent.name} + ' / ' + ${box.name}"
+                            th:selected="${currentFolder != null and currentFolder.id == box.id}"></option>
+                </select>
+                <button type="submit">Upload</button>
+            </form>
+            <span class="hint">Max 10MB. Documents, images, media, archives and installers.</span>
+        </div>
 
-    <nav class="crumbs">
-        <a th:href="@{/files}">Home</a>
-        <span th:if="${currentFolder != null and currentFolder.parent != null}">
+        <nav class="crumbs">
+            <a th:href="@{/files}">Home</a>
+            <span th:if="${currentFolder != null and currentFolder.parent != null}">
             <span class="sep">/</span>
             <a th:href="@{/files(folderId=${currentFolder.parent.id})}"
                th:text="${currentFolder.parent.name}"></a>
         </span>
-        <span th:if="${currentFolder != null}">
+            <span th:if="${currentFolder != null}">
             <span class="sep">/</span>
             <strong th:text="${currentFolder.name}"></strong>
         </span>
-    </nav>
+        </nav>
 
-    <div class="folder-grid">
+        <div class="folder-grid">
 
-        <a class="folder-card" th:if="${currentFolder != null}"
-           th:href="@{/files(folderId=${currentFolder.parent != null} ? ${currentFolder.parent.id} : null)}">
-            <svg viewBox="0 0 64 52" class="folder-icon up">
-                <path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/>
-            </svg>
-            <span class="folder-name">Back</span>
-        </a>
+            <a class="folder-card" th:if="${currentFolder != null}"
+               th:href="@{/files(folderId=${currentFolder.parent != null} ? ${currentFolder.parent.id} : null)}">
+                <svg viewBox="0 0 64 52" class="folder-icon up">
+                    <path d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/>
+                </svg>
+                <span class="folder-name">Back</span>
+            </a>
 
-        <a class="folder-card" th:each="box : ${visibleFolders}"
-           th:href="@{/files(folderId=${box.id})}"
-           th:attr="data-id=${box.id},data-name=${box.name}">
-            <svg viewBox="0 0 64 52" class="folder-icon">
-                <path class="tab" d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v6H4z"/>
-                <path class="body" d="M4 14h56v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/>
-            </svg>
-            <span class="folder-name" th:text="${box.name}"></span>
-        </a>
+            <a class="folder-card" th:each="box : ${visibleFolders}"
+               th:href="@{/files(folderId=${box.id})}"
+               th:attr="data-id=${box.id},data-name=${box.name}">
+                <svg viewBox="0 0 64 52" class="folder-icon">
+                    <path class="tab" d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v6H4z"/>
+                    <path class="body" d="M4 14h56v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/>
+                </svg>
+                <span class="folder-name" th:text="${box.name}"></span>
+            </a>
 
-        <a class="folder-card new" sec:authorize="!hasRole('DEMO')"
-           th:if="${canCreateSubfolder}" href="#" id="newFolderBtn">
-            <svg viewBox="0 0 64 52" class="folder-icon">
-                <path class="dashed" d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/>
-                <text x="32" y="36" class="plus">+</text>
-            </svg>
-            <span class="folder-name">New folder</span>
-        </a>
+            <a class="folder-card new" sec:authorize="!hasRole('DEMO')"
+               th:if="${canCreateSubfolder}" href="#" id="newFolderBtn">
+                <svg viewBox="0 0 64 52" class="folder-icon">
+                    <path class="dashed" d="M4 8a4 4 0 0 1 4-4h16l6 6h26a4 4 0 0 1 4 4v34a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/>
+                    <text x="32" y="36" class="plus">+</text>
+                </svg>
+                <span class="folder-name">New folder</span>
+            </a>
 
-    </div>
+        </div>
 
-    <p class="hint" sec:authorize="!hasRole('DEMO')" th:if="${!visibleFolders.isEmpty()}">
-        Right-click a folder to rename or delete it.
-    </p>
+        <p class="hint" sec:authorize="!hasRole('DEMO')" th:if="${!visibleFolders.isEmpty()}">
+            Right-click a folder to rename or delete it.
+        </p>
 
-    <h2 th:text="${currentFolder == null} ? 'Unfiled files' : 'Files in ' + ${currentFolder.name}"></h2>
+        <h2 th:text="${currentFolder == null} ? 'Unfiled files' : 'Files in ' + ${currentFolder.name}"></h2>
 
-    <p class="empty" th:if="${files.isEmpty()}">Nothing here yet.</p>
+        <p class="empty" th:if="${files.isEmpty()}">Nothing here yet.</p>
 
-    <table th:unless="${files.isEmpty()}">
-        <tr>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Uploaded</th>
-            <th></th>
-        </tr>
-        <tr th:each="f : ${files}">
-            <td th:text="${f.originalName}"></td>
-            <td th:text="${#numbers.formatDecimal(f.sizeInBytes / 1024.0, 1, 1)} + ' KB'"></td>
-            <td th:text="${#temporals.format(f.uploadedAt, 'yyyy-MM-dd HH:mm')}"></td>
-            <td class="right">
+        <table th:unless="${files.isEmpty()}">
+            <tr>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Uploaded</th>
+                <th></th>
+            </tr>
+            <tr th:each="f : ${files}">
+                <td>
+                    <a class="file-link"
+                       th:href="@{/files/open/{id}(id=${f.id})}"
+                       target="_blank" rel="noopener"
+                       th:text="${f.originalName}"></a>
+                </td>
+                <td th:text="${#numbers.formatDecimal(f.sizeInBytes / 1024.0, 1, 1)} + ' KB'"></td>
+                <td th:text="${#temporals.format(f.uploadedAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td class="right">
 
-                <a sec:authorize="!hasRole('DEMO')"
-                   th:href="@{/files/download/{id}(id=${f.id})}">Download</a>
+                    <a th:href="@{/files/open/{id}(id=${f.id})}"
+                       target="_blank" rel="noopener">Open</a>
 
-                <span sec:authorize="hasRole('DEMO')" class="hint">Download disabled</span>
+                    <a sec:authorize="!hasRole('DEMO')"
+                       th:href="@{/files/download/{id}(id=${f.id})}">Download</a>
 
-                <form sec:authorize="!hasRole('DEMO')"
-                      th:action="@{/files/delete}" method="post" class="inline"
-                      onsubmit="return confirm('Delete this file permanently?');">
-                    <input type="hidden" name="id" th:value="${f.id}">
-                    <input type="hidden" name="folderId"
-                           th:if="${currentFolder != null}" th:value="${currentFolder.id}">
-                    <button type="submit" class="danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-    </table>
+                    <form sec:authorize="!hasRole('DEMO')"
+                          th:action="@{/files/delete}" method="post" class="inline"
+                          onsubmit="return confirm('Delete this file permanently?');">
+                        <input type="hidden" name="id" th:value="${f.id}">
+                        <input type="hidden" name="folderId"
+                               th:if="${currentFolder != null}" th:value="${currentFolder.id}">
+                        <button type="submit" class="danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
 
     </main>
 
