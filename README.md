@@ -4,7 +4,7 @@ A private, invite-only file and document store built with Spring Boot, Spring Se
 
 **Live:** https://www.hopeconnects.co.za
 
-**Read-only demo:** `demo@hopeconnect.dev` / `N3wl@ndz@#P12345`
+**Read-only demo:** `demo@hopeconnect.dev` / `Newlands@12345`
 
 ---
 
