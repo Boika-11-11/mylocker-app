@@ -6,8 +6,6 @@ A private, invite-only file and document store built with Spring Boot, Spring Se
 
 **Read-only demo:** `demo@hopeconnect.dev` / `Newlands@12345`
 
----
-
 ## What it does
 
 - Email-based authentication with invite-only access — no public registration
@@ -27,6 +25,7 @@ Each of these was implemented deliberately rather than inherited from a framewor
 | Path traversal | Uploaded filenames are never used as disk paths; files are stored under generated UUIDs |
 | CSRF | Tokens on every state-changing form, with SameSite and HttpOnly session cookies |
 | Credential stuffing | Five failed sign-ins locks the account for fifteen minutes |
+| Account enumeration | Sign-in failures return one identical message whatever the cause, so the form cannot be used to discover which addresses are registered |
 | Malicious uploads | Allow-list of permitted file types; web-executable formats refused |
 | Account recovery | Single-use tokens expiring after 30 minutes; responses never reveal whether an address exists |
 | Secrets | Read from environment variables. Nothing sensitive is committed |
@@ -55,19 +54,22 @@ A user's filename is attacker-controlled text. Rather than sanitising it, the ap
 
 ## Running locally
 
-Requires Java 21 and PostgreSQL.
+Requires Java 21. No database installation needed — local runs use H2, a file-based database created automatically on first startup.
 
-1. Create a database named `lockerdb`
-2. Create `src/main/resources/application-local.properties` (git-ignored):
+1. Create `src/main/resources/application-local.properties` (git-ignored):
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/lockerdb
-spring.datasource.username=postgres
-spring.datasource.password=YOUR_PASSWORD
+spring.datasource.url=jdbc:h2:file:./data/mylocker
+spring.datasource.username=sa
+spring.datasource.password=
 
-mylocker.admin.email-login=you@example.com
+mylocker.admin.email=admin@hopeconnect.local
+mylocker.admin.email-login=admin@hopeconnect.local
 mylocker.admin.username=YourName
 mylocker.admin.password=YOUR_ADMIN_PASSWORD
+
+mylocker.demo.email=demo@hopeconnect.dev
+mylocker.demo.password=YOUR_DEMO_PASSWORD
 
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
@@ -75,8 +77,9 @@ spring.mail.username=you@example.com
 spring.mail.password=YOUR_APP_PASSWORD
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
-mylocker.admin.email=you@example.com
 ```
+
+2. Set the active profile to `local` in your run configuration, or the file above is ignored and the application starts with no administrator account.
 
 3. Run `MylockerApplication`. The schema and administrator account are created on first startup.
 
@@ -86,17 +89,15 @@ The application has been tested against the live deployment using a documented t
 
 One defect was found and fixed: invite emails were failing silently because the application was sending from a shared test address rather than a verified domain.
 
-Two further defects were retested and reclassified after the evidence contradicted the original diagnosis. One could not be reproduced. The other, still open, concerns how the account lockout is surfaced to the user rather than whether it works.
+Two further defects were retested and reclassified after the evidence contradicted the original diagnosis. One could not be reproduced. The other concerned how the account lockout is surfaced to the user rather than whether it works; it was resolved by making every sign-in failure return an identical message and recording lockouts in the server log instead.
 
 ## Known limitations
 
 - Uploaded files are stored on the application's own volume rather than object storage
 - No audit log of administrative actions
 - Session state and rate-limit counters are held in memory, so they reset on restart and would need a shared store across multiple instances
-- The account lockout is enforced correctly, but a locked-out user sees a generic error rather than being told the account is locked. Kept deliberately for now — a lockout-specific message would confirm to an attacker that the account exists. Tracked as an open defect pending that trade-off decision
 - No malware scanning on uploaded files beyond file-type restriction
 
 ## Author
 
-Boikanyo Sere — software quality assurance and technical support.
-ISTQB Foundation Level and Test Automation Engineer certified.
+Boikanyo Sere — software quality assurance and technical support. ISTQB Foundation Level and Test Automation Engineer certified.
