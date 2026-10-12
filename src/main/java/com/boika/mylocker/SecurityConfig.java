@@ -29,7 +29,8 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
 
                         .requestMatchers("/", "/about", "/contact", "/request-access",
-                                "/login", "/forgot-password", "/reset-password").permitAll()
+                                "/login", "/forgot-password", "/reset-password",
+                                "/error").permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
@@ -42,7 +43,8 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/dashboard", true)
-                        .failureHandler(loginFailureHandler)                        .permitAll()
+                        .failureHandler(loginFailureHandler)
+                        .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")

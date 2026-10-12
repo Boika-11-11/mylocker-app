@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Something went wrong - HopeConnect</title>
+    <link rel="stylesheet" th:href="@{/css/locker.css}">
+</head>
+<body class="auth-page">
+
+<div class="auth-box">
+
+    <div class="auth-logo">
+        <svg class="logo-mark" viewBox="0 0 64 64">
+            <rect x="6" y="20" width="52" height="38" rx="7" fill="#A8185A"/>
+            <path d="M18 20v-4a14 14 0 0 1 28 0v4h-8v-4a6 6 0 0 0-12 0v4z" fill="#fff"/>
+            <circle cx="32" cy="36" r="5" fill="#fff"/>
+            <rect x="30" y="39" width="4" height="9" rx="2" fill="#fff"/>
+        </svg>
+        <span class="logo-text">Hope<span>Connect</span></span>
+    </div>
+
+    <h1 th:switch="${status}">
+        <span th:case="403">Not allowed</span>
+        <span th:case="404">Page not found</span>
+        <span th:case="*">Something went wrong</span>
+    </h1>
+
+    <p class="sub" th:switch="${status}">
+        <span th:case="403">You do not have permission to view that page.</span>
+        <span th:case="404">That page does not exist, or it has moved.</span>
+        <span th:case="*">We could not complete that request. Please try again.</span>
+    </p>
+
+    <p class="auth-foot">
+        <a th:href="@{/dashboard}">Back to your dashboard</a>
+    </p>
+
+    <p class="auth-foot">
+        <a th:href="@{/}">Back to home</a>
+    </p>
+
+</div>
+
+</body>
+</html>
